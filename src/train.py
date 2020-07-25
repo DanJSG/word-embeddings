@@ -4,8 +4,8 @@ from wikiarticle import WikiArticle
 from crawler import Crawler
 import re
 
-bbc_limit = 50
-wiki_limit = 250
+bbc_limit = 15
+wiki_limit = 15
 
 new_model = Word2Vec([["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"]], min_count=1)
 
@@ -20,9 +20,6 @@ for path in paths:
         new_model.wv.save("./models/model_partial.bin")
         new_model.save("./models/model_partial_full.bin")
     count += 1
-    regex = re.compile(r"[0-9].*$")
-    if regex.search(path) == None:
-        continue
     url = crawler.protocol + crawler.domain + path
     scraper = WikiArticle(url)
     if scraper.sentences == None:
