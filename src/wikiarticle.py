@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from article import Article
 import requests, re
 
-class BBCArticle(Article):
+class WikiArticle(Article):
     def __init__(self, url):
         super().__init__(url)
         self.body = self._scrape_page()
