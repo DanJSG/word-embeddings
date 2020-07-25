@@ -4,11 +4,11 @@ from crawler import Crawler
 import re
 
 new_model = Word2Vec([["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"]], min_count=1)
-
-domain = "www.bbc.co.uk"
-crawler = Crawler(domain)
-paths = crawler.start_crawling("/news", limit=50)
+crawler = Crawler("https://www.bbc.co.uk/news")
+paths = crawler.crawl()
 count = 0
+trained_count = 0
+
 for path in paths:
     if count % 25 == 0 and count != 0:
         new_model.wv.save_word2vec_format("./models/model_partial.txt", binary=False)
@@ -18,11 +18,12 @@ for path in paths:
     regex = re.compile(r"[0-9].*$")
     if regex.search(path) == None:
         continue
-    url = "https://www.bbc.co.uk" + path
+    url = crawler.protocol + crawler.domain + path
     scraper = BBCArticle(url)
     if scraper.sentences == None:
         continue
-    print("Training model from article body of " + url + ". Training doc: " + str(count))
+    trained_count += 1
+    print("Training model from article body of " + url + ". Page count: " + str(count) + ". Training document: " + str(trained_count))
     new_model.build_vocab(scraper.sentences, update=True)
     new_model.train(sentences=scraper.sentences, total_examples=new_model.corpus_count, epochs=new_model.epochs)
 

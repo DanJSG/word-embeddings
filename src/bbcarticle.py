@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
-import requests
-import re
 from article import Article
+import requests, re
 
 class BBCArticle(Article):
     def __init__(self, url):

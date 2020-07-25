@@ -1,23 +1,30 @@
 from bs4 import BeautifulSoup
-import requests
+import requests, re
 
 class Crawler:
-    def __init__(self, domain_url):
+    def __init__(self, url):
         self.headers = {
             'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0',
             'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*',
         }
-        self.domain_url = domain_url
+        self.protocol, self.domain, self.start_path = self._split_url(url)
         self.visited = []
         self.discovered = []
     
-    def start_crawling(self, start_path, limit=50):
-        url = "https://" + self.domain_url + start_path
+    def _split_url(self, url):
+        reg_match = re.compile(r'(^https?://)([a-zA-Z.\-]*)(/.*)').match(url)
+        protocol = reg_match.group(1)
+        domain = reg_match.group(2)
+        path = reg_match.group(3)
+        return protocol, domain, path
+
+    def crawl(self, limit=50):
+        url = self.protocol + self.domain + self.start_path
         print("Fetching links from " + str(url))
         response = requests.get(url, self.headers)
         soup = BeautifulSoup(response.text, 'lxml')
         links = soup.find_all('a', href=True)
-        self.visited.append(start_path)
+        self.visited.append(self.start_path)
         for link in links:
             if link['href'] == '' or link['href'][0] != '/' or (link['href'] in self.discovered) or '.' in link['href']:
                 continue
@@ -30,7 +37,7 @@ class Crawler:
             if curr_path in self.visited:
                 i += 1
                 continue
-            url = "https://" + self.domain_url + curr_path
+            url = self.protocol + self.domain + curr_path
             print("Fetching links from " + str(url))
             response = requests.get(url, self.headers)
             soup = BeautifulSoup(response.text, 'lxml')
@@ -38,7 +45,6 @@ class Crawler:
             for link in links:
                 if link['href'] == '' or link['href'][0] != '/' or (link['href'] in self.discovered) or (link['href'] in self.visited) or '.' in link['href']:
                     continue
-                # print(link['href'])
                 self.discovered.append(link['href'])
                 if(len(self.discovered) >= limit):
                     break
