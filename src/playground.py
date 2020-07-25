@@ -1,6 +1,6 @@
 from gensim.models import KeyedVectors, Word2Vec
 
-model = Word2Vec.load("./models/fullmodel.bin")
+model = Word2Vec.load("./models/fullmodel2.bin")
 
 while True:
     word_in = input("Words similar to: ")

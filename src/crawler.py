@@ -21,7 +21,6 @@ class Crawler:
         for link in links:
             if link['href'] == '' or link['href'][0] != '/' or (link['href'] in self.discovered) or '.' in link['href']:
                 continue
-            # print(link['href'])
             self.discovered.append(link['href'])
             if len(self.discovered) >= limit:
                 break
@@ -46,3 +45,4 @@ class Crawler:
             self.visited.append(curr_path)
             i += 1
         return self.discovered
+        
