@@ -1,14 +1,19 @@
 from bs4 import BeautifulSoup
 import requests
 import re
-from scraper import Scraper
+from article import Article
 
-class BBCScraper(Scraper):
-    def __init__(self):
-        super().__init__()
+class BBCArticle(Article):
+    def __init__(self, url):
+        super().__init__(url)
+        self.body = self._scrape_page()
+        self.sentences = self._tokenize(self.body)
     
-    def scrape_page(self, url) -> list:
-        response = requests.get(url, self.headers)
+    def _scrape_page(self) -> str:
+        try:
+            response = requests.get(self.url, self.headers)
+        except:
+            return None
         soup = BeautifulSoup(response.text, 'lxml')
         article = soup.find(property="articleBody")
         if article == None:
@@ -19,5 +24,5 @@ class BBCScraper(Scraper):
             if para.has_attr("aria-hidden"):
                 continue
             text += para.get_text()
-        return self._tokenize(text)
+        return text
     

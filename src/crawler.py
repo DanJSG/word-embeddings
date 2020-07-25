@@ -11,7 +11,7 @@ class Crawler:
         self.visited = []
         self.discovered = []
     
-    def start_crawling(self, start_path, limit=250):
+    def start_crawling(self, start_path, limit=50):
         url = "https://" + self.domain_url + start_path
         print("Fetching links from " + str(url))
         response = requests.get(url, self.headers)
@@ -45,4 +45,3 @@ class Crawler:
             self.visited.append(curr_path)
             i += 1
         return self.discovered
-        
