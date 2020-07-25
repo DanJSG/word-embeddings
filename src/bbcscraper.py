@@ -7,10 +7,13 @@ class BBCScraper(Scraper):
     def __init__(self):
         super().__init__()
     
-    def scrape_page(self, url):
+    def scrape_page(self, url) -> list:
         response = requests.get(url, self.headers)
         soup = BeautifulSoup(response.text, 'lxml')
-        article = soup.find(class_="story-body")
+        # article = soup.find(class_="story-body")
+        article = soup.find(property="articleBody")
+        if article == None:
+            return None
         paras = article.find_all('p')
         text = ""
         for para in paras:
