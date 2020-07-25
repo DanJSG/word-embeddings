@@ -6,7 +6,7 @@ import re
 new_model = Word2Vec([["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"]], min_count=1)
 
 crawler = Crawler("www.bbc.co.uk")
-paths = crawler.start_crawling("/news", limit=50)
+paths = crawler.start_crawling("/news", limit=20000)
 scraper = BBCScraper()
 for path in paths:
     regex = re.compile(r"[0-9].*$")
@@ -23,6 +23,6 @@ for path in paths:
     new_model.build_vocab(sentences, update=True)
     new_model.train(sentences=sentences, total_examples=new_model.corpus_count, epochs=new_model.epochs)
 
-
-new_model.wv.save_word2vec_format("./models/model.txt", binary=False)
-new_model.wv.save("./models/model.bin")
+new_model.wv.save_word2vec_format("./models/model2.txt", binary=False)
+new_model.wv.save("./models/model2.bin")
+new_model.save("./models/fullmodel2.bin")

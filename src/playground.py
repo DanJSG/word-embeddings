@@ -1,6 +1,8 @@
 from gensim.models import KeyedVectors, Word2Vec
 
-model = KeyedVectors.load("./models/model.bin", mmap='r')
-similar = model.most_similar("pm")
-# similar = model.wv.most_similar("england")
-print(similar)
+model = Word2Vec.load("./models/fullmodel.bin")
+
+while True:
+    word_in = input("Words similar to: ")
+    similar = model.wv.most_similar(word_in)
+    print(similar)
