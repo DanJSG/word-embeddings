@@ -4,8 +4,8 @@ from wikiarticle import WikiArticle
 from crawler import Crawler
 import re
 
-bbc_limit = 15
-wiki_limit = 15
+bbc_limit = 15000
+wiki_limit = 10000
 
 new_model = Word2Vec([["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"]], min_count=1)
 
